@@ -6,21 +6,6 @@
 
 ## Table of Contents
 
-- Overview
-- Problem Statement
-- Objectives
-- Key Features
-- User Roles and Permissions
-- System Architecture
-- Application Architecture
-- Frontend Architecture
-- Backend Architecture
-- AI Face Recognition Architecture
-- Docker Architecture
-- Project Structure
-
----
-
 <!-- Table of Contents -->
 <p align="center">
   <a href="#overview">Overview</a> •
