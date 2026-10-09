@@ -119,3 +119,85 @@ The system supports multiple user roles:
               │
               ▼
           Attendance
+---
+
+## 🏗️ High-Level Architecture
+
+```text
+
+                              INTERNET
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │      Nginx      │
+                         │ Reverse Proxy   │
+                         │  HTTPS / SSL    │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │                           │
+                    ▼                           ▼
+             ┌──────────────┐            ┌──────────────┐
+             │   Next.js    │            │   FastAPI    │
+             │   Frontend   │◄──────────►│   Backend    │
+             │ React/TS     │    HTTP    │    Python    │
+             └──────────────┘            └──────┬───────┘
+                                                │
+                         ┌──────────────────────┼──────────────────────┐
+                         │                      │                      │
+                         ▼                      ▼                      ▼
+                  ┌──────────────┐       ┌──────────────┐      ┌──────────────┐
+                  │ PostgreSQL   │       │   pgvector   │      │ InsightFace  │
+                  │ Database     │       │ Vector Store │      │ ONNX Runtime │
+                  └──────────────┘       └──────────────┘      └──────────────┘
+
+---
+
+## 🧩 Application Architecture
+
+```text
+
+┌──────────────────────────────────────────────────────────────┐
+│                         FRONTEND                             │
+│                                                              │
+│  Next.js + React + TypeScript + Tailwind CSS                │
+│                                                              │
+│  Product Owner │ Admin │ Teacher │ Student                  │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               │ HTTP / REST API
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                         BACKEND                              │
+│                                                              │
+│  FastAPI + Python + Pydantic + SQLAlchemy                   │
+│                                                              │
+│ Authentication │ Authorization │ Business Logic │ APIs      │
+└───────────────┬─────────────────────┬────────────────────────┘
+                │                     │
+                │                     │
+                ▼                     ▼
+       ┌─────────────────┐    ┌────────────────────┐
+       │   PostgreSQL    │    │    AI / CV Layer   │
+       │                 │    │                    │
+       │ Users           │    │ InsightFace        │
+       │ Organizations   │    │ ONNX Runtime       │
+       │ Groups          │    │ OpenCV             │
+       │ Events          │    │ Face Embeddings    │
+       │ Attendance      │    │                    │
+       └────────┬────────┘    └─────────┬──────────┘
+                │                       │
+                │                       │
+                └───────────┬───────────┘
+                            ▼
+                     ┌──────────────┐
+                     │   pgvector   │
+                     │  512D Vector │
+                     └──────────────┘
+
+---
+
+
+
+
+
