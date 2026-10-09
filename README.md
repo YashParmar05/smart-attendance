@@ -16,30 +16,8 @@
 - [Frontend Architecture](#frontend-architecture)
 - [Backend Architecture](#backend-architecture)
 - [AI Face Recognition Architecture](#ai-face-recognition-architecture)
-- [Attendance Workflow](#attendance-workflow)
-- [Authentication and Authorization](#authentication-and-authorization)
-- [Password Management](#password-management)
-- [Database Architecture](#database-architecture)
-- [Entity Relationships](#entity-relationships)
-- [Event and Group Architecture](#event-and-group-architecture)
-- [API Architecture](#api-architecture)
-- [Project Structure](#project-structure)
-- [Technology Stack](#technology-stack)
 - [Docker Architecture](#docker-architecture)
-- [Production Deployment Architecture](#production-deployment-architecture)
-- [Environment Configuration](#environment-configuration)
-- [Local Development](#local-development)
-- [Docker Deployment](#docker-deployment)
-- [API Documentation](#api-documentation)
-- [Security](#security)
-- [Data and Privacy](#data-and-privacy)
-- [Attendance Reporting](#attendance-reporting)
-- [Application Workflows](#application-workflows)
-- [Development Guidelines](#development-guidelines)
-- [Future Improvements](#future-improvements)
-- [Learning Outcomes](#learning-outcomes)
-- [Author](#author)
-- [License](#license)
+- [Project Structure](#project-structure)
 
 ---
 
@@ -227,4 +205,278 @@ The application follows a hierarchical access model.
                 Attendance
 
 ```
+---
+
 # System Architecture
+
+```text
+
+                                INTERNET
+                                    |
+                                    v
+                         +---------------------+
+                         |       NGINX         |
+                         | Reverse Proxy / SSL |
+                         +----------+----------+
+                                    |
+                  +-----------------+-----------------+
+                  |                                   |
+                  v                                   v
+        +-------------------+               +-------------------+
+        |     Next.js       |               |      FastAPI      |
+        |     Frontend      |<------------->|      Backend      |
+        | React + TypeScript|    REST API   | Python            |
+        +-------------------+               +---------+---------+
+                                                      |
+                                  +-------------------+-------------------+
+                                  |                   |                   |
+                                  v                   v                   v
+                         +----------------+   +----------------+   +----------------+
+                         |  PostgreSQL    |   |    pgvector    |   |  InsightFace   |
+                         |   Database     |   | Vector Storage  |   | ONNX Runtime   |
+                         +----------------+   +----------------+   +----------------+
+
+```
+---
+
+# Application Architecture
+
+```text
+
++------------------------------------------------------------+
+|                         FRONTEND                           |
+|                                                            |
+| Next.js + React + TypeScript + Tailwind CSS               |
+|                                                            |
+| Product Owner | Admin | Teacher | Student                 |
++------------------------------+-----------------------------+
+                               |
+                               | HTTP / REST API
+                               v
++------------------------------------------------------------+
+|                         BACKEND                            |
+|                                                            |
+| FastAPI + Python + Pydantic + SQLAlchemy                  |
+|                                                            |
+| Authentication | Authorization | Business Logic | APIs   |
++----------------------+-------------------+-----------------+
+                       |                   |
+                       v                   v
+             +----------------+   +------------------------+
+             |   PostgreSQL   |   |      AI / CV Layer     |
+             |                |   |                        |
+             | Users          |   | InsightFace             |
+             | Organizations  |   | ONNX Runtime            |
+             | Groups         |   | OpenCV                  |
+             | Events         |   | Face Embeddings         |
+             | Attendance     |   |                        |
+             +----------------+   +-----------+------------+
+                                             |
+                                             v
+                                      +--------------+
+                                      |   pgvector   |
+                                      |  Vector(512) |
+                                      +--------------+
+
+
+```
+---
+
+# Frontend Architecture
+
+```text
+
+User Interaction
+       |
+       v
+React Component
+       |
+       v
+API Utility Layer
+       |
+       v
+HTTP Request
+       |
+       v
+FastAPI Backend
+       |
+       v
+Response
+       |
+       v
+React State
+       |
+       v
+Updated UI
+
+```
+---
+
+# Backend Architecture
+
+```text
+
+HTTP Request
+     |
+     v
+FastAPI Router
+     |
+     v
+Authentication
+     |
+     v
+Authorization
+     |
+     v
+Pydantic Validation
+     |
+     v
+Business Logic
+     |
+     v
+SQLAlchemy
+     |
+     v
+PostgreSQL
+     |
+     v
+HTTP Response
+
+```
+---
+
+# AI Face Recognition Architecture
+
+```text
+
+                       Camera
+                          |
+                          v
+                    Image Frame
+                          |
+                          v
+                   Face Detection
+                          |
+                          v
+                   Face Processing
+                          |
+                          v
+                  Face Recognition
+                       Model
+                          |
+                          v
+                   Face Embedding
+                          |
+                          v
+                512-Dimensional Vector
+                          |
+                          v
+                Vector Comparison
+                          |
+                          v
+                 Similarity / Score
+                          |
+                          v
+                 Student Identity
+                          |
+                          v
+               Attendance Validation
+                          |
+                          v
+                 Attendance Record
+
+```
+---
+
+# Project Structure
+
+```text
+
+smart-attendance/
+│
+├── backend/
+│   │
+│   ├── app/
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── admin.py
+│   │   │   ├── attendance.py
+│   │   │   ├── auth.py
+│   │   │   ├── event.py
+│   │   │   ├── face.py
+│   │   │   ├── group.py
+│   │   │   ├── organization.py
+│   │   │   ├── product_owner.py
+│   │   │   ├── student.py
+│   │   │   ├── teacher.py
+│   │   │   └── ...
+│   │   │
+│   │   ├── models/
+│   │   │
+│   │   ├── schemas/
+│   │   │
+│   │   ├── services/
+│   │   │
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── dependencies.py
+│   │   └── main.py
+│   │
+│   ├── models/
+│   │
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── ...
+│
+├── frontend/
+│   │
+│   ├── app/
+│   │   │
+│   │   ├── (app)/
+│   │   │   ├── product-owner/
+│   │   │   ├── students/
+│   │   │   ├── teachers/
+│   │   │   ├── groups/
+│   │   │   ├── events/
+│   │   │   ├── attendance/
+│   │   │   └── ...
+│   │   │
+│   │   ├── login/
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   │
+│   ├── components/
+│   │
+│   ├── lib/
+│   │   └── api.ts
+│   │
+│   ├── public/
+│   │
+│   ├── Dockerfile
+│   ├── package.json
+│   └── ...
+│
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+
+```
+---
+
+# Docker Architecture
+
+```text
+
+                         Docker Compose
+                              |
+              +---------------+---------------+
+              |               |               |
+              v               v               v
+       +-------------+ +-------------+ +-------------+
+       | PostgreSQL  | |   FastAPI   | |   Next.js   |
+       | + pgvector  | |   Backend   | |  Frontend   |
+       +-------------+ +-------------+ +-------------+
+
+```
+
+
