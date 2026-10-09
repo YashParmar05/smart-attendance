@@ -225,3 +225,6 @@ The application follows a hierarchical access model.
                     |
                     v
                 Attendance
+
+```
+# System Architecture
