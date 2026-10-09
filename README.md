@@ -1,97 +1,107 @@
 # Smart Attendance System
 
-> An AI-powered, role-based attendance management platform that uses face recognition to automate student attendance, manage events and groups, and provide separate portals for Product Owners, Administrators, Teachers, and Students.
+<p align="center">
+
+  <h1 align="center">Smart Attendance System</h1>
+
+  <p align="center">
+    AI-powered attendance management platform using face recognition, role-based access control, FastAPI, Next.js, PostgreSQL, pgvector and Docker.
+  </p>
+
+  <p align="center">
+    <a href="#features">Features</a> •
+    <a href="#architecture">Architecture</a> •
+    <a href="#ai-face-recognition">AI Face Recognition</a> •
+    <a href="#authentication--authorization">Authentication</a> •
+    <a href="#database-architecture">Database</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#deployment">Deployment</a>
+  </p>
+
+</p>
 
 ---
 
-## 📌 Overview
+# 📌 Overview
 
-The Smart Attendance System is a full-stack attendance management platform designed for schools and educational organizations.
+The **Smart Attendance System** is a full-stack, AI-powered attendance management platform designed for educational organizations such as schools, colleges and training institutions.
 
-The system combines:
+The system replaces traditional manual attendance workflows with an automated platform where authorized users can create events, organize students into groups, enroll face data and take attendance using a camera.
 
-- AI-based face recognition
-- Role-Based Access Control (RBAC)
-- JWT authentication
-- Event and group management
-- Automated attendance marking
-- Student/teacher/admin management
-- PostgreSQL database
-- Vector embeddings using pgvector
-- Docker containerization
-- Nginx reverse proxy
-- HTTPS production deployment
+The platform combines:
 
-Instead of manually selecting students and marking attendance, authorized users can use a camera to recognize students and automatically record their attendance.
+- Artificial Intelligence
+- Computer Vision
+- Face Recognition
+- Vector Embeddings
+- REST APIs
+- Role-Based Access Control
+- JWT Authentication
+- PostgreSQL
+- pgvector
+- Next.js
+- React
+- FastAPI
+- Docker
+- Nginx
+- HTTPS
+- Linux server deployment
+
+The application provides different portals for:
+
+- Product Owner
+- Administrator
+- Teacher
+- Student
+
+Each role receives different capabilities according to its responsibilities and assigned permissions.
 
 ---
 
-# ✨ Key Features
+# 🎯 Problem Statement
 
-## 🤖 AI-Based Face Recognition
+Traditional attendance systems often require:
 
-- Face detection using InsightFace / ONNX Runtime
-- Face embedding generation
-- 512-dimensional face embeddings
-- Stored embeddings for enrolled users
-- Face similarity/confidence-based identification
-- Camera-based attendance recognition
+- Manual student selection
+- Paper-based attendance
+- Manual data entry
+- Time-consuming attendance processing
+- Difficulty maintaining attendance history
+- Limited access control
+- Difficult attendance reporting
+- Possibility of incorrect attendance marking
 
-### Recognition Pipeline
+The Smart Attendance System addresses these problems by providing an integrated platform where:
 
-```text
-Camera
-   │
-   ▼
-Face Detection
-   │
-   ▼
-Face Processing
-   │
-   ▼
-Face Embedding
-   │
-   ▼
-512-Dimensional Vector
-   │
-   ▼
-Vector / Similarity Comparison
-   │
-   ▼
-Identity Recognition
-   │
-   ▼
-Attendance Marking
-```
+1. Administrators manage students, teachers and groups.
+2. Teachers manage their assigned groups and events.
+3. Authorized users can capture students through a camera.
+4. AI-based face recognition identifies enrolled students.
+5. Attendance is automatically recorded.
+6. Attendance status is calculated according to event timing.
+7. Students can view their own attendance.
+8. Access is controlled through authentication, roles and permissions.
 
+---
 
-# 🔐 Authentication & Authorization
+# ✨ Features
 
-```text
-User
- │
- ▼
-Login
- │
- ▼
-FastAPI Authentication API
- │
- ▼
-Credentials Verification
- │
- ▼
-JWT Access Token
- │
- ▼
-Frontend
- │
- ▼
-Authenticated Requests
+## 🔐 Authentication
 
-```
+- JWT-based authentication
+- Secure password hashing
+- Login/logout workflow
+- Authenticated API requests
+- Password change workflow
+- Temporary password support
+- Forced password change after reset
+- Role information inside authentication context
 
+---
 
-# 👥 User Roles
+## 👥 Role-Based Access Control
+
+The system supports multiple user roles:
 
 ```text
                     Product Owner
@@ -100,44 +110,12 @@ Authenticated Requests
                        Admin
                          │
               ┌──────────┴──────────┐
+              │                     │
               ▼                     ▼
-           Teacher                Student
+           Teacher               Student
               │
               ▼
-        Events / Groups
+       Events / Groups
               │
               ▼
           Attendance
-
-```
-# 🏗️ System Architecture
-
-```text
-
-
-                         Internet
-                            │
-                            ▼
-                     ┌─────────────┐
-                     │    Nginx    │
-                     │ Reverse     │
-                     │ Proxy + SSL │
-                     └──────┬──────┘
-                            │
-              ┌─────────────┴─────────────┐
-              │                           │
-              ▼                           ▼
-       ┌──────────────┐           ┌──────────────┐
-       │   Next.js    │           │   FastAPI    │
-       │   Frontend   │ ────────► │   Backend    │
-       └──────────────┘           └──────┬───────┘
-                                         │
-                         ┌───────────────┼───────────────┐
-                         │               │               │
-                         ▼               ▼               ▼
-                  ┌────────────┐  ┌────────────┐  ┌─────────────┐
-                  │ PostgreSQL │  │  pgvector  │  │ InsightFace │
-                  │            │  │            │  │ ONNXRuntime │
-                  └────────────┘  └────────────┘  └─────────────┘
-
-```
