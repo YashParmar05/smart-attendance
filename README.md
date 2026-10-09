@@ -119,7 +119,7 @@ The system supports multiple user roles:
               │
               ▼
           Attendance
----
+```
 
 ## 🏗️ High-Level Architecture
 
@@ -151,7 +151,7 @@ The system supports multiple user roles:
                   │ Database     │       │ Vector Store │      │ ONNX Runtime │
                   └──────────────┘       └──────────────┘      └──────────────┘
 
----
+```
 
 ## 🧩 Application Architecture
 
@@ -195,7 +195,7 @@ The system supports multiple user roles:
                      │  512D Vector │
                      └──────────────┘
 
----
+```
 
 
 
