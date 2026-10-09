@@ -388,6 +388,25 @@ HTTP Response
 ```
 ---
 
+
+# Docker Architecture
+
+```text
+
+                         Docker Compose
+                              |
+              +---------------+---------------+
+              |               |               |
+              v               v               v
+       +-------------+ +-------------+ +-------------+
+       | PostgreSQL  | |   FastAPI   | |   Next.js   |
+       | + pgvector  | |   Backend   | |  Frontend   |
+       +-------------+ +-------------+ +-------------+
+
+```
+---
+
+
 # Project Structure
 
 ```text
@@ -461,22 +480,6 @@ smart-attendance/
 └── README.md
 
 ```
----
 
-# Docker Architecture
-
-```text
-
-                         Docker Compose
-                              |
-              +---------------+---------------+
-              |               |               |
-              v               v               v
-       +-------------+ +-------------+ +-------------+
-       | PostgreSQL  | |   FastAPI   | |   Next.js   |
-       | + pgvector  | |   Backend   | |  Frontend   |
-       +-------------+ +-------------+ +-------------+
-
-```
 
 
