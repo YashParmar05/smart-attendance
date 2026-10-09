@@ -48,12 +48,6 @@ export default function ProductOwnerDashboard() {
   const [error, setError] =
     useState("");
 
-  useEffect(() => {
-
-    loadDashboard();
-
-  }, []);
-
   const router = useRouter();
 
     useEffect(() => {
@@ -91,19 +85,16 @@ export default function ProductOwnerDashboard() {
         ).toLowerCase();
 
         if (userRole !== "product_owner") {
-
-        router.replace("/dashboard");
-
+          router.replace("/dashboard");
+          return;
         }
+        else
+          loadDashboard();
 
     } catch {
-
         router.replace("/dashboard");
-
     }
-
     }, [router]);
-
 
   async function loadDashboard() {
 

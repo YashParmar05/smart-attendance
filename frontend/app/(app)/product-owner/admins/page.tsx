@@ -10,6 +10,8 @@ import {
   createAdmin,
   getAdmins,
   getSchools,
+  resetUserPassword,
+  updateAdmin,
   updateAdminSchool,
   updateAdminPermissions,
   updateAdminStatus,
@@ -216,6 +218,26 @@ export default function ProductOwnerAdminsPage() {
     useState<number | null>(null);
 
   const [editingSchoolId, setEditingSchoolId] =
+    useState("");
+
+
+  // ==========================================================
+  // EDIT ADMIN PROFILE
+  // ==========================================================
+
+  const [editingAdminId, setEditingAdminId] =
+    useState<number | null>(null);
+
+  const [editingAdminName, setEditingAdminName] =
+    useState("");
+
+  const [editingAdminEmail, setEditingAdminEmail] =
+    useState("");
+
+  const [editingAdminEmployeeId, setEditingAdminEmployeeId] =
+    useState("");
+
+  const [editingAdminPassword, setEditingAdminPassword] =
     useState("");
 
 
@@ -477,6 +499,107 @@ export default function ProductOwnerAdminsPage() {
 
       }
     );
+  }
+
+
+  // ==========================================================
+  // OPEN ADMIN PROFILE EDIT
+  // ==========================================================
+
+  function openAdminEditor(admin: Admin) {
+    setEditingAdminId(admin.id);
+    setEditingAdminName(admin.name);
+    setEditingAdminEmail(admin.email);
+    setEditingAdminEmployeeId(admin.employee_id);
+    setEditingAdminPassword("");
+
+    setError("");
+    setSuccess("");
+  }
+
+
+  // ==========================================================
+  // SAVE ADMIN PROFILE
+  // ==========================================================
+
+  async function saveAdminProfile() {
+    if (editingAdminId === null) {
+      return;
+    }
+
+    if (!editingAdminName.trim()) {
+      setError("Administrator name is required.");
+      return;
+    }
+
+    if (!editingAdminEmail.trim()) {
+      setError("Administrator email is required.");
+      return;
+    }
+
+    if (!editingAdminEmployeeId.trim()) {
+      setError("Employee ID is required.");
+      return;
+    }
+
+    if (
+      editingAdminPassword &&
+      editingAdminPassword.length < 6
+    ) {
+      setError(
+        "Temporary password must contain at least 6 characters."
+      );
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError("");
+      setSuccess("");
+
+      await updateAdmin(
+        editingAdminId,
+        {
+          name: editingAdminName.trim(),
+          email: editingAdminEmail.trim(),
+          employee_id:
+            editingAdminEmployeeId.trim(),
+        }
+      );
+
+      if (editingAdminPassword) {
+        await resetUserPassword(
+          editingAdminId,
+          editingAdminPassword
+        );
+      }
+
+      setSuccess(
+        editingAdminPassword
+          ? "Administrator details and password updated successfully."
+          : "Administrator details updated successfully."
+      );
+
+      setEditingAdminId(null);
+      setEditingAdminName("");
+      setEditingAdminEmail("");
+      setEditingAdminEmployeeId("");
+      setEditingAdminPassword("");
+
+      await loadData();
+    } catch (error: any) {
+      console.error(
+        "Admin profile update error:",
+        error
+      );
+
+      setError(
+        error?.message ||
+        "Failed to update administrator"
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
 
@@ -1247,6 +1370,19 @@ export default function ProductOwnerAdminsPage() {
                             <button
                               type="button"
                               onClick={() =>
+                                openAdminEditor(
+                                  admin
+                                )
+                              }
+                              className="rounded-lg border border-blue-200 px-3 py-1.5 text-xs sm:text-sm font-medium text-blue-600 hover:bg-blue-50"
+                            >
+                              Edit
+                            </button>
+
+
+                            <button
+                              type="button"
+                              onClick={() =>
                                 openSchoolEditor(
                                   admin
                                 )
@@ -1308,6 +1444,131 @@ export default function ProductOwnerAdminsPage() {
         )}
 
       </div>
+
+
+      {/* ======================================================
+          ADMIN PROFILE EDITOR
+      ======================================================= */}
+
+      {editingAdminId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <h2 className="text-lg font-semibold">
+              Edit Administrator
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Update administrator details and optionally set a temporary password.
+            </p>
+
+            <div className="mt-5 space-y-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Name
+                </label>
+
+                <input
+                  type="text"
+                  value={editingAdminName}
+                  onChange={(event) =>
+                    setEditingAdminName(
+                      event.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                  placeholder="Administrator Name"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  value={editingAdminEmail}
+                  onChange={(event) =>
+                    setEditingAdminEmail(
+                      event.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                  placeholder="admin@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Employee ID
+                </label>
+
+                <input
+                  type="text"
+                  value={editingAdminEmployeeId}
+                  onChange={(event) =>
+                    setEditingAdminEmployeeId(
+                      event.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                  placeholder="ADM-001"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Temporary Password
+                  <span className="ml-1 font-normal text-gray-400">
+                    (optional)
+                  </span>
+                </label>
+
+                <input
+                  type="password"
+                  value={editingAdminPassword}
+                  onChange={(event) =>
+                    setEditingAdminPassword(
+                      event.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                  placeholder="Leave blank to keep current password"
+                />
+
+                <p className="mt-1 text-xs text-gray-500">
+                  Leave blank to keep the current password.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingAdminId(null);
+                  setEditingAdminName("");
+                  setEditingAdminEmail("");
+                  setEditingAdminEmployeeId("");
+                  setEditingAdminPassword("");
+                }}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={saveAdminProfile}
+                disabled={saving}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              >
+                {saving ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
       {/* ======================================================

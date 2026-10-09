@@ -1,6 +1,12 @@
+// const API_URL =
+//   process.env.NEXT_PUBLIC_API_URL ||
+//   "http://127.0.0.1:8000";
+
+
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://127.0.0.1:8000";
+  "/api";
+
 
 
 async function apiRequest(
@@ -1062,6 +1068,32 @@ export async function getAdmin(
 ) {
   return apiRequest(
     `/product-owner/admins/${adminId}`
+  );
+}
+
+
+/**
+ * Update administrator profile
+ */
+export async function updateAdmin(
+  adminId: number,
+  admin: {
+    name: string;
+    email: string;
+    employee_id: string;
+  }
+) {
+  return apiRequest(
+    `/product-owner/admins/${adminId}`,
+    {
+      method: "PATCH",
+
+      body: JSON.stringify({
+        name: admin.name,
+        email: admin.email,
+        employee_id: admin.employee_id,
+      }),
+    }
   );
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   getTeachers,
@@ -254,11 +255,53 @@ export default function TeachersPage() {
   // INITIAL LOAD
   // ============================================================
 
+  const router = useRouter();
+
   useEffect(() => {
 
-    loadTeachers();
+    try {
 
-  }, []);
+      const token =
+      localStorage.getItem("access_token");
+
+      if (!token) {
+      router.replace("/login");
+      return;
+      }
+
+      const parts =
+      token.split(".");
+
+      if (parts.length !== 3) {
+      router.replace("/dashboard");
+      return;
+      }
+
+      const payload =
+      JSON.parse(
+          atob(
+          parts[1]
+              .replace(/-/g, "+")
+              .replace(/_/g, "/")
+          )
+      );
+
+      const userRole =
+      String(
+          payload.role || ""
+      ).toLowerCase();
+
+      if (userRole !== "admin") {
+        router.replace("/dashboard");
+      }
+      else
+        loadTeachers();
+
+    } catch {
+        router.replace("/dashboard");
+    }
+
+  }, [router]);
 
 
   // ============================================================

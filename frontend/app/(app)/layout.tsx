@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import Sidebar from "@/components/Sidebar";
@@ -12,6 +12,7 @@ export default function AppLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -21,7 +22,6 @@ export default function AppLayout({
       return;
     }
 
-    // Check JWT payload
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
 
@@ -30,29 +30,19 @@ export default function AppLayout({
         pathname !== "/change-password"
       ) {
         router.push("/change-password");
+        return;
       }
+
+      setIsAuthorized(true);
     } catch {
       localStorage.removeItem("access_token");
       router.push("/login");
     }
   }, [router, pathname]);
 
-  // Don't show normal application UI while forced password change is required
-  const token = localStorage.getItem("access_token");
-
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-
-      if (
-        payload.must_change_password === true &&
-        pathname !== "/change-password"
-      ) {
-        return null;
-      }
-    } catch {
-      return null;
-    }
+  // Prevent rendering the dashboard layout until client-side token verification completes
+  if (!isAuthorized) {
+    return null;
   }
 
   return (
