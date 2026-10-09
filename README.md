@@ -62,3 +62,72 @@ Identity Recognition
    │
    ▼
 Attendance Marking
+
+
+# 🔐 Authentication & Authorization
+
+User
+ │
+ ▼
+Login
+ │
+ ▼
+FastAPI Authentication API
+ │
+ ▼
+Credentials Verification
+ │
+ ▼
+JWT Access Token
+ │
+ ▼
+Frontend
+ │
+ ▼
+Authenticated Requests
+
+
+
+# 👥 User Roles
+                    Product Owner
+                         │
+                         ▼
+                       Admin
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+           Teacher                Student
+              │
+              ▼
+        Events / Groups
+              │
+              ▼
+          Attendance
+
+
+# 🏗️ System Architecture
+
+                         Internet
+                            │
+                            ▼
+                     ┌─────────────┐
+                     │    Nginx    │
+                     │ Reverse     │
+                     │ Proxy + SSL │
+                     └──────┬──────┘
+                            │
+              ┌─────────────┴─────────────┐
+              │                           │
+              ▼                           ▼
+       ┌──────────────┐           ┌──────────────┐
+       │   Next.js    │           │   FastAPI    │
+       │   Frontend   │ ────────► │   Backend    │
+       └──────────────┘           └──────┬───────┘
+                                         │
+                         ┌───────────────┼───────────────┐
+                         │               │               │
+                         ▼               ▼               ▼
+                  ┌────────────┐  ┌────────────┐  ┌─────────────┐
+                  │ PostgreSQL │  │  pgvector  │  │ InsightFace │
+                  │            │  │            │  │ ONNXRuntime │
+                  └────────────┘  └────────────┘  └─────────────┘
