@@ -62,10 +62,12 @@ Identity Recognition
    │
    ▼
 Attendance Marking
+```
 
 
 # 🔐 Authentication & Authorization
 
+```text
 User
  │
  ▼
@@ -86,9 +88,12 @@ Frontend
  ▼
 Authenticated Requests
 
+```
 
 
 # 👥 User Roles
+
+```text
                     Product Owner
                          │
                          ▼
@@ -104,8 +109,11 @@ Authenticated Requests
               ▼
           Attendance
 
-
+```
 # 🏗️ System Architecture
+
+```text
+
 
                          Internet
                             │
@@ -131,3 +139,5 @@ Authenticated Requests
                   │ PostgreSQL │  │  pgvector  │  │ InsightFace │
                   │            │  │            │  │ ONNXRuntime │
                   └────────────┘  └────────────┘  └─────────────┘
+
+```
